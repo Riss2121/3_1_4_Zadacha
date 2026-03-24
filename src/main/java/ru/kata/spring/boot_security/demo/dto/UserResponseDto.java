@@ -2,7 +2,7 @@ package ru.kata.spring.boot_security.demo.dto;
 
 import java.util.Set;
 
-public class UserDto {
+public class UserResponseDto {
 
     private Long id;
     private String firstName;
@@ -11,7 +11,16 @@ public class UserDto {
     private String username;
     private Set<RoleDto> roles;
 
-    public UserDto() {
+    public UserResponseDto() {
+    }
+
+    public UserResponseDto(Long id, String firstName, String lastName, int age, String username, Set<RoleDto> roles) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.username = username;
+        this.roles = roles;
     }
 
     public Long getId() {
