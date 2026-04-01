@@ -19,8 +19,13 @@ public class UserRestController {
 
     @GetMapping("/api/user")
     public ResponseEntity<User> getCurrentUser(Principal principal) {
-        return ResponseEntity.ok(
-                userService.findByUsername(principal.getName())
-        );
+
+        if (principal == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        User user = userService.findByUsername(principal.getName());
+
+        return ResponseEntity.ok(user);
     }
 }

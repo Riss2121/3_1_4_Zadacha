@@ -63,7 +63,8 @@ public class AdminRestController {
 
     private Set<Role> resolveRoles(Set<Role> roles) {
         return roles.stream()
-                .map(role -> roleRepository.findByRole(role.getRole()).orElseThrow())
+                .map(role -> roleRepository.findByName(role.getName())
+                        .orElseThrow(() -> new RuntimeException("Role not found: " + role.getName())))
                 .collect(Collectors.toSet());
     }
 }

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User page</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark px-3">
+    <span class="navbar-brand mb-0" id="userInfo"></span>
+    <form th:action="@{/logout}" method="post" class="mb-0">
+        <button class="btn btn-outline-light btn-sm" type="submit">Logout</button>
+    </form>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- SIDEBAR -->
+        <div class="col-2 bg-white min-vh-100 p-0">
+            <div class="list-group rounded-0 mt-3">
+                <a href="/admin" class="list-group-item list-group-item-action">
+                    Admin
+                </a>
+                <a href="/user" class="list-group-item list-group-item-action active">
+                    User
+                </a>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="col-10 p-4">
+            <h3>User information</h3>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <table class="table table-striped table-bordered text-center mb-0">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Age</th>
+                            <th>Username</th>
+                            <th>Roles</th>
+                        </tr>
+                        </thead>
+                        <tbody id="userTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    async function loadUser() {
+        try {
+            const response = await fetch('/api/user');
+
+            if (!response.ok) {
+                console.error('Error:', response.status);
+                return;
+            }
+
+            const user = await response.json();
+
+            const roles = user.roles
+                .map(role => role.name.replace('ROLE_', ''))
+                .join(' ');
+
+            document.getElementById('userInfo').textContent =
+                user.username + ' with roles: ' + roles;
+
+            document.getElementById('userTable').innerHTML = `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.age}</td>
+                    <td>${user.username}</td>
+                    <td>${roles}</td>
+                </tr>
+            `;
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    }
+
+    loadUser();
+</script>
+
+</body>
+</html>
